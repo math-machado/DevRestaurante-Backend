@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -44,12 +44,12 @@ model Product {
   created_at  DateTime? @default(now())
   updated_at  DateTime? @default(now())
 
-  category    Category @relation(fields: [category_id], references: [id])
-  
-  @@map("products")
+  category Category @relation(fields: [category_id], references: [id])
 
   category_id String
-  items Item[]
+  items       Item[]
+
+  @@map("products")
 }
 
 model Order {
@@ -60,9 +60,9 @@ model Order {
   name       String?
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
+  items      Item[]
 
   @@map("orders")
-  items Item[]
 }
 
 model Item {
@@ -71,11 +71,11 @@ model Item {
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
-  order Order @relation(fields: [order_id], references: [id])
+  order   Order   @relation(fields: [order_id], references: [id])
   product Product @relation(fields: [product_id], references: [id])
 
-  @@map("items")
-
-  order_id String
+  order_id   String
   product_id String
+
+  @@map("items")
 }
